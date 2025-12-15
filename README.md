@@ -104,6 +104,13 @@ To get a local copy up and running follow these simple steps.
 
 Qt5.10 , Opengl , OpenCV , protobuf , lib3ds , assimp , lcm , nlohmann/json
 
+Use the provided helper script to install the Qt5 development headers and tools when working on Ubuntu-based environments:
+
+```sh
+chmod +x scripts/install-qt5-dev.sh
+./scripts/install-qt5-dev.sh
+```
+
 在发布的版本中包含了部分依赖库的源代码，均来自github，没有包含的部分需要自行前往下载。
 
 ### Installation
