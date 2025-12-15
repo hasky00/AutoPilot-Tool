@@ -198,6 +198,7 @@ private slots:
     void OnRemoveDataPlotWindow(QDataPlotWidget *);
 private:
     tool::Tool_Config *       config_;
+    bool                      config_loaded_from_file_;
     tool::DataManager *       m_dataManager;
     tool::ThreadManager       m_threadManager;
     tool::PlayProcess  *      m_pPlayProcess;

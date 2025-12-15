@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     config_(new tool::Tool_Config),
+    config_loaded_from_file_(false),
     m_dataManager(nullptr),
     m_pPlayProcess(nullptr),
     m_pLogProcess(nullptr),
@@ -126,25 +127,38 @@ bool MainWindow::Init(){
 
 /* private function*/
 void MainWindow::InitConfig(){
+    config_loaded_from_file_ = false;
     std::fstream configFile("./ToolConfig.json",ios::in);
+    QString strTimeStamp = QString::fromStdString(ConvertGlobalTimeStampInMicroSec2String(GetGlobalTimeStampInMicroSec()));
     if(configFile){
         nlohmann::json js;
         configFile >> js;
         from_json(js, *config_);
-        //*config_ = js;
+        config_loaded_from_file_ = true;
+        OnShowOperationInfo(strTimeStamp + QString(" : Loaded configuration from ToolConfig.json"), QColor(0, 128, 0));
     }else{
         config_->set_DefaultConfig();
+        OnShowOperationInfo(strTimeStamp + QString(" : ToolConfig.json missing, using default configuration"), QColor(255, 140, 0));
+        SaveConfig();
     }
 }
 
 void MainWindow::SaveConfig(){
+    if(!config_){
+        return;
+    }
     std::fstream configFile("./ToolConfig.json",ios::out);
+    QString strTimeStamp = QString::fromStdString(ConvertGlobalTimeStampInMicroSec2String(GetGlobalTimeStampInMicroSec()));
     if(configFile){
         nlohmann::json js;
         js = *config_;
-        configFile << js.dump(4);;
+        configFile << js.dump(4);
+        QString message = config_loaded_from_file_
+                ? QString(" : Saved configuration to ToolConfig.json")
+                : QString(" : Wrote default configuration to ToolConfig.json");
+        OnShowOperationInfo(strTimeStamp + message, QColor(0, 128, 0));
     }else{
-        /* do nothing*/
+        OnShowOperationInfo(strTimeStamp + QString(" : Failed to save ToolConfig.json"), QColor(255, 0, 0));
     }
 }
 
