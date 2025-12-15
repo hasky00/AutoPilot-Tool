@@ -68,17 +68,42 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    m_propertyBrowser->save_Config();
-    m_dataManager->save_Config();
-    m_pPlayProcess->save_Config();
-    m_pLogProcess->save_Config();
-    ui->openGLWidget_viewer->save_Config();
-    delete m_propertyBrowser;
+    if (m_propertyBrowser) {
+        m_propertyBrowser->save_Config();
+        delete m_propertyBrowser;
+        m_propertyBrowser = nullptr;
+    }
+
+    if (m_dataManager) {
+        m_dataManager->save_Config();
+    }
+
+    if (m_pPlayProcess) {
+        m_pPlayProcess->save_Config();
+    }
+
+    if (m_pLogProcess) {
+        m_pLogProcess->save_Config();
+    }
+
+    if (ui) {
+        ui->openGLWidget_viewer->save_Config();
+    }
+
     delete m_messageSendBrowser;
+    m_messageSendBrowser = nullptr;
+
     delete m_tagSelectDialog;
-    SaveConfig();
-    delete config_;
+    m_tagSelectDialog = nullptr;
+
+    if (config_) {
+        SaveConfig();
+        delete config_;
+        config_ = nullptr;
+    }
+
     delete ui;
+    ui = nullptr;
 }
 
 /* public function*/
